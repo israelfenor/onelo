@@ -1,28 +1,26 @@
-use std::{fs, ffi::OsStr};
+use std::{path::{PathBuf, self}, error::Error};
 
 fn main() {
-    get_markdown_files("test/files".to_string());
+    let dir = path::Path::new("test/files");
+    let paths = get_markdown_files(dir.to_path_buf());
+
+    dbg!(paths);
 }
 
-fn get_markdown_files (path: String) -> Vec<String> {
-    let mut markdown_files: Vec<String> = vec![];
-    
-    match fs::read_dir(path) {
-        Err(why) => println!("! {:?}", why.kind()),
-        Ok(files) => for file in files {
-            match file {
-                Err(_) => {}
-                Ok(_) => {
-                    if file.unwrap().path().extension().and_then(OsStr::to_str) == Some("md") {
-                        println!("> MD");
-                        //markdown_files.push();
-                    }
-                }
+fn get_markdown_files(dir: PathBuf) -> Result<Vec<PathBuf>, Box<dyn Error>> {
+    let mut paths = vec![];
+
+    for result in dir.read_dir()? {
+        let path = result?.path();
+
+        if let Some(ext) = path.extension() {
+            if ext == "md" {
+                paths.push(path);
             }
         }
     }
 
-    markdown_files
+    Ok(paths)
 }
 
 #[cfg(test)]
@@ -31,7 +29,8 @@ mod tests {
 
     #[test]
     fn test_get_only_md_files () {
-        let markdown_files = get_markdown_files("test/files".to_string());
-        assert_eq!(markdown_files.len(), 2);
+        let dir = path::Path::new("test/files");
+        let paths = get_markdown_files(dir.to_path_buf());
+        assert_eq!(paths.unwrap().len(), 2);
     }
 }

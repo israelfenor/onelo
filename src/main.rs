@@ -86,8 +86,7 @@ mod tests {
 
     #[test]
     fn test_get_only_md_files() {
-        let dir = path::Path::new("test/files");
-        let paths = get_markdown_files(dir.to_path_buf());
+        let paths = get_markdown_files("test/files");
         assert_eq!(paths.unwrap().len(), 2);
     }
 }

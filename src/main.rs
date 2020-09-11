@@ -1,32 +1,36 @@
 use clap::{AppSettings, Clap};
 use std::error::Error;
-use std::fs;
-use std::path::{Path, PathBuf};
 
 type Message = String;
 type Result<T, E = Box<dyn Error>> = std::result::Result<T, E>;
 
-fn get_markdown_files<P: AsRef<Path>>(path: P) -> Result<Vec<PathBuf>> {
-    let mut paths = vec![];
+mod files {
+    use std::path::{Path, PathBuf};
+    use std::fs;
+    use super::Result;
 
-    for result in fs::read_dir(path)? {
-        let path = result?.path();
-
-        if let Some(ext) = path.extension() {
-            if ext == "md" {
-                paths.push(path);
+    pub fn get_markdown_files<P: AsRef<Path>>(path: P) -> Result<Vec<PathBuf>> {
+        let mut paths = vec![];
+    
+        for result in fs::read_dir(path)? {
+            let path = result?.path();
+    
+            if let Some(ext) = path.extension() {
+                if ext == "md" {
+                    paths.push(path);
+                }
             }
         }
+    
+        Ok(paths)
     }
-
-    Ok(paths)
 }
 
 /// The build command handles the process of parsing all markdown files.
 ///
 /// TODO: This module should be extracted to its own file.
 mod build {
-    use super::{get_markdown_files, Message, Result};
+    use super::{files::get_markdown_files, Message, Result};
     use clap::Clap;
     use std::path::PathBuf;
 
@@ -86,7 +90,7 @@ mod tests {
 
     #[test]
     fn test_get_only_md_files() {
-        let paths = get_markdown_files("test/files");
+        let paths = files::get_markdown_files("test/files");
         assert_eq!(paths.unwrap().len(), 2);
     }
 }

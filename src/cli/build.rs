@@ -1,7 +1,7 @@
-use clap::Clap;
-use std::path::PathBuf;
-use std::error::Error;
 use crate::files;
+use clap::Clap;
+use std::error::Error;
+use std::path::PathBuf;
 
 type Message = String;
 type Result<T, E = Box<dyn Error>> = std::result::Result<T, E>;

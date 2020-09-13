@@ -1,4 +1,4 @@
-use std::{error::Error, io::BufReader};
+use std::{error::Error};
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -30,10 +30,12 @@ fn is_valid_file(path: &PathBuf) -> bool {
     true
 }
 
-// pub fn process_file<P: AsRef<Path>>(path: P) -> Result<String> {
-//     let file = fs::File::open("test/files/01.md")?;
-//     let reader = BufReader::new(file);
-// }
+/// Get the content of a file as String
+pub fn get_file_content<P: AsRef<Path>>(path: P) -> Result<String> {
+    let file = fs::read_to_string(path)?;
+
+    Ok(file)
+}
 
 #[cfg(test)]
 mod tests {
@@ -45,9 +47,11 @@ mod tests {
         assert_eq!(paths.unwrap().len(), 2);
     }
 
-    // #[test]
-    // fn test_read_markdown_file() {
-    //     read_markdown_file("test/files/01.md");
-    //     assert!(true);
-    // }
+    #[test]
+    fn test_get_markdown_file_content() {
+        let file_content = get_file_content("test/files/01.md");
+        let file_content_string = file_content.unwrap();
+
+        assert_eq!(file_content_string, String::from("+++\n+++\n\n# Lorem ipsum\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
+    }
 }

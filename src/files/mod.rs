@@ -1,9 +1,21 @@
 use regex::Regex;
 use std::error::Error;
+use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
 
 type Result<T, E = Box<dyn Error>> = std::result::Result<T, E>;
+
+#[derive(Debug)]
+struct SplitError(String);
+
+impl fmt::Display for SplitError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Bad!")
+    }
+}
+
+impl Error for SplitError {}
 
 /// Get all markdown files of a path
 pub fn get_markdown_files<P: AsRef<Path>>(path: P) -> Result<Vec<PathBuf>> {
@@ -40,17 +52,29 @@ pub fn get_file_content<P: AsRef<Path>>(path: P) -> Result<String> {
 pub fn split_content<'c>(content: &'c str) -> Result<(&'c str, &'c str)> {
     let split_regex =
         Regex::new(r"^[[:space:]]*\+\+\+(\r?\n(?s).*?(?-s))\+\+\+\r?\n?((?s).*(?-s))$")
-            .expect("Error when compiling a regular expression.");
+            .expect("Something went wrong when compiling a regular expression.");
 
     if !split_regex.is_match(content) {
-        // Err("Couldn't find metadata. Did you forget to add `+++`?");
+        return Err(Box::new(SplitError(
+            "Couldn't find metadata. Did you forget to add `+++`?".into(),
+        )));
     }
 
-    let splitted_content = split_regex.captures(content).unwrap();
+    let splitted_content = split_regex.captures(content).ok_or(SplitError(
+        "Something went wrong when splitting the content.".into(),
+    ))?;
 
     Ok((
-        splitted_content.get(1).unwrap().as_str().trim(),
-        splitted_content.get(2).unwrap().as_str().trim(),
+        splitted_content
+            .get(1)
+            .ok_or(SplitError("Couldn't find any metadata".into()))?
+            .as_str()
+            .trim(),
+        splitted_content
+            .get(2)
+            .ok_or(SplitError("Couldn't find any content".into()))?
+            .as_str()
+            .trim(),
     ))
 }
 

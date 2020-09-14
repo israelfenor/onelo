@@ -93,12 +93,28 @@ mod tests {
         let file_content = get_file_content("test/files/01.md");
         let file_content_string = file_content.unwrap();
 
-        assert_eq!(file_content_string, String::from("+++\n[metadata]\nid = \"01fbd72a-5ad4-4d4d-bc6e-7973e65e02b6\"\n+++\n\n# Lorem ipsum\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
+        let expected = r#"+++
+[metadata]
+id = "01fbd72a-5ad4-4d4d-bc6e-7973e65e02b6"
++++
+
+# Lorem ipsum
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit."#;
+
+        assert_eq!(file_content_string, expected.to_string());
     }
 
     #[test]
     fn test_split_content_with_metadata() {
-        let content = "+++\n[metadata]\nid = \"01fbd72a-5ad4-4d4d-bc6e-7973e65e02b6\"\n+++\n\n# Lorem ipsum\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+        let content = r#"+++
+[metadata]
+id = "01fbd72a-5ad4-4d4d-bc6e-7973e65e02b6"
++++
+
+# Lorem ipsum
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit."#;
         let splitted_content = split_content(content).unwrap();
 
         assert_eq!(

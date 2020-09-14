@@ -23,12 +23,10 @@ pub fn get_markdown_files<P: AsRef<Path>>(path: P) -> Result<Vec<PathBuf>> {
 /// Check if a file is a valid source
 fn is_valid_file(path: &PathBuf) -> bool {
     if let Some(ext) = path.extension() {
-        if ext != "md" {
-            return false;
-        }
+        return ext == "md";
     }
 
-    true
+    false
 }
 
 /// Get the content of a file as String
@@ -44,7 +42,7 @@ pub fn split_content<'c>(content: &'c str) -> Result<(&'c str, &'c str)> {
         Regex::new(r"^[[:space:]]*\+\+\+(\r?\n(?s).*?(?-s))\+\+\+\r?\n?((?s).*(?-s))$").unwrap();
 
     if !split_regex.is_match(content) {
-        Err("Couldn't find metadata. Did you forget to add `+++`?");
+        // Err("Couldn't find metadata. Did you forget to add `+++`?");
     }
 
     let splitted_content = split_regex.captures(content).unwrap();

@@ -127,9 +127,24 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget 
         );
     }
 
-    // #[test]
-    // fn test_split_content_without_metadata() {
-    //     let content = "# Lorem ipsum\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-    //     let splitted_content = split_content(content).unwrap();
-    // }
+    #[test]
+    fn test_split_content_with_empty_metadata() {
+        let content = r#"+++
++++
+
+# Lorem ipsum
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit."#;
+        assert_eq!(split_content(content).is_ok(), true);
+    }
+
+    #[test]
+    fn test_split_content_without_metadata() {
+        let content = r#"
+# Lorem ipsum
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit."#;
+
+        assert_eq!(split_content(content).is_err(), true);
+    }
 }

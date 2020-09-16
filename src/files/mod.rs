@@ -1,17 +1,16 @@
+use crate::context::Result;
 use regex::Regex;
 use std::error::Error;
 use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-type Result<T, E = Box<dyn Error>> = std::result::Result<T, E>;
-
 #[derive(Debug)]
 struct SplitError(String);
 
 impl fmt::Display for SplitError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Bad!")
+        write!(f, "{}", self.0)
     }
 }
 

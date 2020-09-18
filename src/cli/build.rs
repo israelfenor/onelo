@@ -1,10 +1,7 @@
+use crate::context::{Message, Result};
 use crate::files;
 use clap::Clap;
-use std::error::Error;
 use std::path::PathBuf;
-
-type Message = String;
-type Result<T, E = Box<dyn Error>> = std::result::Result<T, E>;
 
 /// Builds the onelo store.
 #[derive(Debug, Clap)]

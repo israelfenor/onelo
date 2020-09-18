@@ -59,17 +59,17 @@ pub fn split_content<'c>(content: &'c str) -> Result<(&'c str, &'c str)> {
         )));
     }
 
-    let splitted_content = split_regex.captures(content).ok_or(SplitError(
+    let captures = split_regex.captures(content).ok_or(SplitError(
         "Something went wrong when splitting the content.".into(),
     ))?;
 
     Ok((
-        splitted_content
+        captures
             .get(1)
             .ok_or(SplitError("Couldn't find any metadata".into()))?
             .as_str()
             .trim(),
-        splitted_content
+        captures
             .get(2)
             .ok_or(SplitError("Couldn't find any content".into()))?
             .as_str()
@@ -114,16 +114,16 @@ id = "01fbd72a-5ad4-4d4d-bc6e-7973e65e02b6"
 # Lorem ipsum
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit."#;
-        let splitted_content = split_content(content).unwrap();
+        let content_split = split_content(content).unwrap();
 
         assert_eq!(
             "[metadata]\nid = \"01fbd72a-5ad4-4d4d-bc6e-7973e65e02b6\"",
-            splitted_content.0
+            content_split.0
         );
 
         assert_eq!(
             "# Lorem ipsum\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            splitted_content.1
+            content_split.1
         );
     }
 

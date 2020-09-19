@@ -3,8 +3,20 @@ name = "onelo"
 version = "0.1.0"
 authors = ["Israel Fenor <israelfenor@gmail.com>", "Arnau Siches <asiches@gmail.com>"]
 edition = "2018"
+license = "MIT"
+description = "A knowledge graph sketch"
+readme = "README.md"
+keywords = ["cli", "knowledge_graph"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "onelo"
+path = "src/main.rs"
+bench = false
+
+[lib]
+name = "onelo_backend"
+path = "src/lib.rs"
+
 
 [dependencies]
 clap = "=3.0.0-beta.1"

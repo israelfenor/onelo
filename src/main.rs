@@ -1,5 +1,5 @@
 use clap::{AppSettings, Clap};
-use onelo::cli::build;
+use onelo_backend::cli::build;
 
 #[derive(Debug, Clap)]
 enum Subcommand {

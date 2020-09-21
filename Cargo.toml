@@ -19,6 +19,7 @@ path = "src/lib.rs"
 
 
 [dependencies]
+chrono = "0.4"
 clap = "=3.0.0-beta.2"
 regex = "1"
 rusqlite = { version = "0.24", features = ["bundled", "functions", "limits", "load_extension"] }

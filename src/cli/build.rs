@@ -7,10 +7,10 @@ use std::path::PathBuf;
 #[derive(Debug, Clap)]
 pub struct Cmd {
     /// Input path
-    #[clap(long, short = "i", value_name = "path", default_value = "./test/files")]
+    #[clap(long, short = 'i', value_name = "path", default_value = "./test/files")]
     input_path: PathBuf,
     /// Cache path
-    #[clap(long, short = "c", value_name = "path", default_value = "./onelo.db")]
+    #[clap(long, short = 'c', value_name = "path", default_value = "./onelo.db")]
     cache_path: PathBuf,
 }
 

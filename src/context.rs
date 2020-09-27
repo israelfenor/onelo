@@ -1,6 +1,7 @@
 //! This module contains helpers for managing contextual information to be tracked throught the
 //! process.
 
+use chrono::prelude::*;
 use clap::crate_version;
 use std::error::Error;
 use std::result::Result as StdResult;
@@ -17,9 +18,9 @@ pub type Result<T, E = Box<dyn Error>> = StdResult<T, E>;
 ///
 /// Has as many members as needed as a key:value pair
 #[derive(Debug)]
-struct Context {
-    version: String,
-    // created: DateTime<Utc>, //TODO: Waiting to merge with Arnau code because he will add crono dependency and to prevent conflicts
+pub struct Context {
+    version: String, // The verion of onelo used 
+    created: DateTime<Utc>, // When the context is created
 }
 
 /// Context struct implementation
@@ -28,6 +29,7 @@ impl Context {
     pub fn new() -> Self {
         Context {
             version: crate_version!().to_string(),
+            created: Utc::now(),
         }
     }
 }
@@ -42,6 +44,7 @@ mod test {
             let context = Context::new();
 
             assert_eq!(context.version, crate_version!().to_string());
+            assert!(context.created.to_string().len() > 0);
         }
     }
 }

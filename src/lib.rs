@@ -1,6 +1,7 @@
+pub mod artefact;
 pub mod cache;
+pub mod checksum;
 pub mod cli;
-pub mod content;
 pub mod content_type;
 pub mod context;
 pub mod files;

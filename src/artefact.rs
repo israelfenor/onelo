@@ -1,7 +1,6 @@
 //! This module is concerned with the unique content found in sources.
 
-// TODO: Promote to a Type that encodes the hashing algorithm e.g. Blake3
-pub type Checksum = String;
+use crate::checksum::Checksum;
 
 // TODO: We want to keep raw bytes here, so we can delay UTF-8 enforcement to when it's needed.
 /// A sequence of bytes for a piece of content.

@@ -1,0 +1,59 @@
+[context] {bgcolor: "#fbfbdb"}
+*key
+value
+
+[source] {bgcolor: "#fbbb69"}
+*id
+route
+timestamp
+
+[source_entry] {bgcolor: "#fbbb69"}
+*id
++source_id
++content_id
+content_type_id
+
+[artefact] {bgcolor: "#fbbb69"}
+*id
+content
+
+[node] {bgcolor: "#d0e0d0"}
+*id
+title
+description
++lineage_id
++content_id
++content_type_id
++artefact_id
+
+[connection] {bgcolor: "#d0e0d0"}
+*origin_id
+*target_id
+title
+description
++connection_type_id
++lineage_id
++content_type_id
++artefact_id
+
+[connection_type] {bgcolor: "#d0e0d0"}
+*id
+label
++lineage_id
+
+[content_type] {bgcolor: "#fbbb69"}
+*id
+
+source_entry *--1 source
+source_entry 1--+ artefact
+source_entry 1--+ content_type
+
+node 1--* connection
+node 1--1 source_entry
+node 1--+ content_type
+node 1--+ artefact
+
+connection 1--1 source_entry
+connection *--1 connection_type
+connection 1--+ content_type
+connection 1--* artefact

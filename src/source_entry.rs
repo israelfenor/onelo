@@ -1,6 +1,6 @@
 //! This module is concerned with the source entries.
 
-use crate::content::Checksum;
+use crate::checksum::Checksum;
 use crate::content_type::{ContentType, ContentTypeError};
 use crate::source::{Id as SourceId, ParseIdError};
 use std::error::Error;

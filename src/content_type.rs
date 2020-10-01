@@ -1,4 +1,4 @@
-//! This module is concerned with the content types of the source entries
+//! This module is concerned with the content types of the source entries.
 //!
 //! For example: markdown, json...
 

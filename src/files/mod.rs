@@ -1,3 +1,5 @@
+//! This module deals with the collection of information from files.
+
 use crate::context::Result;
 use regex::Regex;
 use std::error::Error;
@@ -82,13 +84,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_get_only_md_files() {
+    fn get_only_md_files() {
         let paths = get_markdown_files("test/files");
         assert_eq!(paths.unwrap().len(), 2);
     }
 
     #[test]
-    fn test_get_markdown_file_content() {
+    fn get_markdown_file_content() {
         let file_content = get_file_content("test/files/01.md");
         let file_content_string = file_content.unwrap();
 
@@ -105,7 +107,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget 
     }
 
     #[test]
-    fn test_split_content_with_metadata() {
+    fn split_content_with_metadata() {
         let content = r#"+++
 [metadata]
 id = "01fbd72a-5ad4-4d4d-bc6e-7973e65e02b6"
@@ -128,7 +130,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget 
     }
 
     #[test]
-    fn test_split_content_with_empty_metadata() {
+    fn split_content_with_empty_metadata() {
         let content = r#"+++
 +++
 
@@ -139,7 +141,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget 
     }
 
     #[test]
-    fn test_split_content_without_metadata() {
+    fn split_content_without_metadata() {
         let content = r#"
 # Lorem ipsum
 

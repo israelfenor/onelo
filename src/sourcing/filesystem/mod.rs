@@ -49,10 +49,17 @@ fn is_valid_file(path: &PathBuf) -> bool {
 }
 
 /// Get the content of a file as String
-pub fn get_file_content<P: AsRef<Path>>(path: P) -> Result<String> {
-    let file = fs::read_to_string(path)?;
+pub fn get_content_as_string<P: AsRef<Path>>(path: P) -> Result<String> {
+    let file_content = fs::read_to_string(path)?;
 
-    Ok(file)
+    Ok(file_content)
+}
+
+/// Get the content of a file as binary
+pub fn get_content_as_binary<P: AsRef<Path>>(path: P) -> Result<Vec<u8>> {
+    let file_content = fs::read(path)?;
+
+    Ok(file_content)
 }
 
 /// Take an String with all the file content and split it in metada and data
@@ -97,8 +104,8 @@ mod tests {
     }
 
     #[test]
-    fn read_file_content() {
-        let file_content = get_file_content("test/files/01.md");
+    fn read_content_as_string() {
+        let file_content = get_content_as_string("test/files/01.md");
         let file_content_string = file_content.unwrap();
 
         let expected = r#"+++
@@ -111,6 +118,11 @@ id = "01fbd72a-5ad4-4d4d-bc6e-7973e65e02b6"
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc posuere nibh eget tortor rhoncus dictum. Lorem ipsum dolor sit amet, consectetur adipiscing elit."#;
 
         assert_eq!(file_content_string, expected.to_string());
+    }
+    #[test]
+    fn read_content_as_binary() {
+        let file_content = get_content_as_binary("test/files/01.md");
+        assert!(file_content.is_ok());
     }
 
     //     #[test]

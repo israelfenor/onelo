@@ -10,14 +10,20 @@ use std::str::FromStr;
 
 /// The multihash code.
 pub type Code = u8;
-const BLAKE3: Code = 0x1e;
+pub type Length = u8;
+
+const BLAKE3_CODE: Code = 0x1e;
+const BLAKE3_LEN: Length = 0x20;
 
 pub type Byteset = [u8; OUT_LEN];
 pub type Hex = ArrayString<[u8; 64]>;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Checksum {
+    /// The algorithm code https://github.com/multiformats/multicodec/blob/master/table.csv
     code: Code,
+    /// The hash length https://github.com/multiformats/multihash
+    len: Length,
     hash: Hash,
 }
 
@@ -27,11 +33,17 @@ impl Checksum {
     /// If you need to cast a `Byteset` as a `Checksum` use the `From` implementations.
     ///
     /// ## Examples
+    ///
+    /// ```
+    /// use onelo_backend::checksum::Checksum;
+    ///
+    /// let chksum = Checksum::new(b"onelo");
+    /// let expected = "1e20cabe0427e7fdaa13ec1d49de58a6179a2ecb6dd6fd674261421949fab0acc525";
+    ///
+    /// assert_eq!(chksum.to_string(), expected);
+    /// ```
     pub fn new(input: &[u8]) -> Self {
-        Self {
-            code: BLAKE3,
-            hash: blake3::hash(input),
-        }
+        Self::wrap(blake3::hash(input))
     }
 
     pub fn as_bytes(&self) -> &[u8; 32] {
@@ -44,7 +56,8 @@ impl Checksum {
 
     fn wrap(hash: Hash) -> Self {
         Self {
-            code: BLAKE3,
+            code: BLAKE3_CODE,
+            len: BLAKE3_LEN,
             hash: hash.into(),
         }
     }
@@ -70,7 +83,7 @@ impl From<Checksum> for Byteset {
 
 impl fmt::Display for Checksum {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:0x}{}", self.code, self.to_hex())
+        write!(f, "{:0x}{:0x}{}", self.code, self.len, self.to_hex())
     }
 }
 
@@ -79,10 +92,18 @@ impl FromStr for Checksum {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let hash_bytes = hex::decode(s)?;
-        // let hash_array: [u8; OUT_LEN] = hash_bytes[..].try_into()?;
         let code: u8 = hash_bytes[0];
-        dbg!(&code);
-        let hash_array: [u8; OUT_LEN] = hash_bytes[1..].try_into()?;
+        let len: u8 = hash_bytes[1];
+
+        if code != BLAKE3_CODE {
+            return Err(ChecksumError::UnknownCode(code));
+        }
+
+        if len != BLAKE3_LEN {
+            return Err(ChecksumError::InconsistentLength(code, len));
+        }
+
+        let hash_array: [u8; OUT_LEN] = hash_bytes[2..].try_into()?;
         let hash: Hash = hash_array.into();
 
         Ok(Checksum::wrap(hash))
@@ -93,6 +114,8 @@ impl FromStr for Checksum {
 pub enum ChecksumError {
     Bad,
     UnexpectedLength,
+    UnknownCode(Code),
+    InconsistentLength(Code, Length),
     Hex(hex::FromHexError),
 }
 
@@ -104,6 +127,14 @@ impl fmt::Display for ChecksumError {
             ChecksumError::UnexpectedLength => {
                 write!(f, "The given slice cannot be casted as a checksum")
             }
+            ChecksumError::UnknownCode(code) => {
+                write!(f, "The given checksum has an unknown code `{}`", code)
+            }
+            ChecksumError::InconsistentLength(code, len) => write!(
+                f,
+                "The given checksum has a code `{}` with an inconsistent length `{}`",
+                code, len
+            ),
         }
     }
 }
@@ -129,14 +160,14 @@ mod tests {
     #[test]
     fn blake3_checksum() {
         let actual = Checksum::new(b"onelo");
-        let expected = "1ecabe0427e7fdaa13ec1d49de58a6179a2ecb6dd6fd674261421949fab0acc525";
+        let expected = "1e20cabe0427e7fdaa13ec1d49de58a6179a2ecb6dd6fd674261421949fab0acc525";
 
         assert_eq!(actual.to_string(), expected);
     }
 
     #[test]
     fn parse() -> Result<(), ChecksumError> {
-        let hex = "1ecabe0427e7fdaa13ec1d49de58a6179a2ecb6dd6fd674261421949fab0acc525";
+        let hex = "1e20cabe0427e7fdaa13ec1d49de58a6179a2ecb6dd6fd674261421949fab0acc525";
         let actual: Checksum = hex.parse()?;
         let expected = Checksum::new(b"onelo");
 

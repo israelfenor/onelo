@@ -1,5 +1,5 @@
 use crate::context::{Message, Result};
-use crate::files;
+use crate::sourcing::filesystem;
 use clap::Clap;
 use std::path::PathBuf;
 
@@ -16,7 +16,7 @@ pub struct Cmd {
 
 impl Cmd {
     pub fn run(&self) -> Result<Message> {
-        let paths = files::get_markdown_files(&self.input_path)?;
+        let paths = filesystem::get_files(&self.input_path)?;
 
         dbg!(&paths);
         let message = format!("{} files parsed.", paths.len());

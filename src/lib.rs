@@ -4,6 +4,6 @@ pub mod checksum;
 pub mod cli;
 pub mod content_type;
 pub mod context;
+pub mod filesystem;
 pub mod source;
 pub mod source_entry;
-pub mod sourcing;

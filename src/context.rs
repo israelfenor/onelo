@@ -19,7 +19,7 @@ pub type Result<T, E = Box<dyn Error>> = StdResult<T, E>;
 /// Has as many members as needed as a key:value pair
 #[derive(Debug)]
 pub struct Context {
-    version: String, // The verion of onelo used 
+    version: String,        // The verion of onelo used
     created: DateTime<Utc>, // When the context is created
 }
 

@@ -1,5 +1,5 @@
 use crate::context::{Message, Result};
-use crate::sourcing::filesystem;
+use crate::filesystem;
 use clap::Clap;
 use std::path::PathBuf;
 

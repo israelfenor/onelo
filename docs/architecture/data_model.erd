@@ -10,7 +10,7 @@ timestamp
 [source_entry] {bgcolor: "#fbbb69"}
 *id
 +source_id
-+content_id
++artefact_id
 content_type_id
 
 [artefact] {bgcolor: "#fbbb69"}
@@ -22,7 +22,6 @@ content
 title
 description
 +lineage_id
-+content_id
 +content_type_id
 +artefact_id
 

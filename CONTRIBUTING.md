@@ -5,9 +5,12 @@ Onelo is in a very early stage, thanks for chipping in!
 
 ## Setup
 
-Onelo requires a standard Rust setup with Rust version equal or greater than
-1.45.
+Onelo requires a standard Rust setup with Rust version equal or greater than 1.46.
 
+### GNU/Linux
+
+Make sure you also have the development packages of openssl installed.
+For example, `libssl-dev` on Ubuntu or `openssl-devel` on Fedora.
 
 ## Testing
 

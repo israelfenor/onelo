@@ -27,8 +27,32 @@ pub fn get_files<P: AsRef<Path>>(path: P) -> Result<Vec<PathBuf>> {
     for result in fs::read_dir(path)? {
         let path = result?.path();
 
-        if is_valid_file(&path) {
-            paths.push(path);
+        if path.is_file() {
+            if is_valid_file(&path) {
+                paths.push(path);
+            }
+        }
+    }
+
+    Ok(paths)
+}
+
+/// Get all valid files from a path and all subdirs
+pub fn get_files_recursive<P: AsRef<Path>>(path: P) -> Result<Vec<PathBuf>> {
+    let mut paths = vec![];
+
+    for result in fs::read_dir(path)? {
+        let path = result?.path();
+
+        if path.is_dir() {
+            let recursive_paths = get_files_recursive(&path);
+            paths.append(recursive_paths.unwrap().as_mut());
+        }
+
+        if path.is_file() {
+            if is_valid_file(&path) {
+                paths.push(path);              
+            }
         }
     }
 
@@ -101,6 +125,12 @@ mod tests {
     fn get_valid_files() {
         let paths = get_files("test/files");
         assert_eq!(paths.unwrap().len(), 2);
+    }
+
+    #[test]
+    fn get_valid_files_recursive() {
+        let paths = get_files_recursive("test/files");
+        assert_eq!(paths.unwrap().len(), 4);
     }
 
     #[test]

@@ -46,7 +46,7 @@ pub fn get_files_recursive<P: AsRef<Path>>(path: P) -> Result<Vec<PathBuf>> {
 
         if path.is_dir() {
             let recursive_paths = get_files_recursive(&path);
-            paths.append(recursive_paths.unwrap().as_mut());
+            paths.append(recursive_paths?.as_mut());
         }
 
         if path.is_file() {

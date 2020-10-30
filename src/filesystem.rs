@@ -139,8 +139,7 @@ mod tests {
         let file_content_string = file_content.unwrap();
 
         let expected = r#"+++
-[metadata]
-id = "01fbd72a-5ad4-4d4d-bc6e-7973e65e02b6"
+id = "01"
 +++
 
 # Lorem ipsum
